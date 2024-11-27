@@ -1,8 +1,3 @@
-"""
-4-Data bit messages with Hamming codes
-
-Parity bits at powers of 2 (1, 2, 4), so only 3 needed for a 4 bit message
-"""
 import random
 
 green_print = lambda x: f"\033[30;42m{x}\033[0m"
@@ -147,19 +142,18 @@ def show_random_error_correction(msgs, pars):
         if sm % 2 != 0:
             print(red_print(sm))
             odds.append(k)
-            elmt += 2 ** (int(k[1:]) - 1)
-            elmt_str.append(f"(|2 ** {(int(k[1:]) - 1)}| = {2 ** (int(k[1:]) - 1)})")
+            ordn = int(k[1:]) - 1
+            elmt += 2 ** ordn
+            bnlist = [str(z) for z in int_to_bin_list(2 ** ordn)]
+            elmt_str.append(f"(2**{ordn} = {green_print(2 ** ordn)} = {blue_print("".join(bnlist))})")
         else:
             print(green_print(sm))
 
     print(f"\nParity checks failed: \n{odds}")
-    print(f"\nFLIPPED BIT: {" + ".join(elmt_str)} = {green_print(elmt)}")
+    print(f"\nFLIPPED BIT: {" + ".join(elmt_str)} = {green_print(elmt)} = {blue_print("".join([str(g) for g in int_to_bin_list(elmt)]))}")
 
-    msg[elmt-1] = msg[elmt-1] ^ 1
+    msg[elmt - 1] = msg[elmt - 1] ^ 1
     print(f"\nCORRECTED MESSAGE:\n{print_hamming_code(msg)}")
-
-
-
 
 
 def NbitHamming(n):
@@ -175,4 +169,4 @@ def NbitHamming(n):
 
 
 if __name__ == "__main__":
-    NbitHamming(4)
+    NbitHamming(8)
