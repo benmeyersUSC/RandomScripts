@@ -12,7 +12,6 @@ def int_to_bin_list(x: int):
 
     res = []
     while x > 0:
-        # res = str(x % 2) + res
         res.append(x % 2)
         x //= 2
 
@@ -27,7 +26,7 @@ def get_poss(bits):
         while len(b) < bits:
             b.insert(0, 0)
         posss.append(b)
-        print(f"{i:0{len(str(2 ** bits))}d}: {print_hamming_code(b)}")
+        print(f"{i:0{len(str(2 ** bits))}d}: {green_print("".join([str(x) for x in b]))}")
     return posss
 
 
@@ -51,7 +50,6 @@ def get_pars(bits):
         numStuff += 1
 
     pars = {"count": i}
-
     for j in range(1, i + 1):
         pars[f"P{j}"] = {"indices": get_nums_with_one_at(j, numStuff)}
 
@@ -169,4 +167,5 @@ def NbitHamming(n):
 
 
 if __name__ == "__main__":
-    NbitHamming(8)
+    NbitHamming(4)
+
