@@ -21,7 +21,7 @@ def int_to_bin_list(x: int):
 def get_poss(bits):
     print(f"\nPossible messages:")
     posss = []
-    for i in range(2 ** bits):
+    for i in range(2 ** bits)[11:12]:
         b = int_to_bin_list(i)
         while len(b) < bits:
             b.insert(0, 0)
@@ -114,7 +114,10 @@ def fill_parities(possibilities, pars):
 
 def show_random_error_correction(msgs, pars):
     msg = random.choice(msgs)
-    print(f"\n\nINTENDED MESSAGE: \n{print_hamming_code(msg)}")
+    print("\n\n-------------------------------------------------------------------------------------------")
+    print(
+        f"INTENDED MESSAGE: \n{green_print("".join([str(msg[a]) for a in range(len(msg)) if not ((a + 1) > 0 and ((a + 1) & a) == 0)]))}")
+    print(f"\nENCODED TRANSMISSION: \n{print_hamming_code(msg)}")
     rind = random.randint(0, len(msg) - 1)
     msg[rind] = msg[rind] ^ 1
     flip_show = [str(x) for x in msg]
@@ -128,18 +131,18 @@ def show_random_error_correction(msgs, pars):
     pkeys = list(pars.keys())
     pkeys.remove("count")
 
-    odds = []
+    parity_bits_failed = []
     elmt = 0
     elmt_str = []
     for k in pkeys:
-        inds = pars[k]["indices"]
-        print(f"{k} bits{inds} => sum: ", end="")
+        indices = pars[k]["indices"]
+        print(f"{k} bits{indices} => sum: ", end="")
         sm = 0
-        for j in inds:
+        for j in indices:
             sm += msg[j - 1]
         if sm % 2 != 0:
             print(red_print(sm))
-            odds.append(k)
+            parity_bits_failed.append(k)
             ordn = int(k[1:]) - 1
             elmt += 2 ** ordn
             bnlist = [str(z) for z in int_to_bin_list(2 ** ordn)]
@@ -147,14 +150,32 @@ def show_random_error_correction(msgs, pars):
         else:
             print(green_print(sm))
 
-    print(f"\nParity checks failed: \n{odds}")
-    print(f"\nFLIPPED BIT: {" + ".join(elmt_str)} = {green_print(elmt)} = {blue_print("".join([str(g) for g in int_to_bin_list(elmt)]))}")
+    print(f"\nParity checks failed: \n{parity_bits_failed}")
+    print(
+        f"\nFLIPPED BIT: {" + ".join(elmt_str)} = {green_print(elmt)} = {blue_print("".join([str(g) for g in int_to_bin_list(elmt)]))}")
 
     msg[elmt - 1] = msg[elmt - 1] ^ 1
-    print(f"\nCORRECTED MESSAGE:\n{print_hamming_code(msg)}")
+    print(f"\nCORRECTED TRANSMISSION:\n{print_hamming_code(msg)}")
+    print(
+        f"\nDECODED MESSAGE: \n{green_print("".join([str(msg[a]) for a in range(len(msg)) if not ((a + 1) > 0 and ((a + 1) & a) == 0)]))}")
 
 
-def NbitHamming(n):
+def run_one_example(length):
+    ls = [random.randint(0, 1) for _ in range(length)]
+    print(f"Randomly Generated Message:\n{green_print("".join([str(x) for x in ls]))}")
+    msgs = [ls]
+
+    parities = get_pars(length)
+    stuff_poss(msgs, parities)
+
+    # properly encode Hamming Parity Bits
+    fill_parities(msgs, parities)
+
+    # now take a random possibility, mess with it, and show how to error-correct
+    show_random_error_correction(msgs, parities)
+
+
+def exhaustive_n_bit_hamming(n):
     possibilities = get_poss(n)
     parities = get_pars(n)
     stuff_poss(possibilities, parities)
@@ -167,5 +188,6 @@ def NbitHamming(n):
 
 
 if __name__ == "__main__":
-    NbitHamming(4)
+    # exhaustive_n_bit_hamming(4)
 
+    run_one_example(54)
