@@ -1,12 +1,6 @@
 import numpy as np
 import functools
 
-# bits = np.random.randint(0, 2, 16)
-# print(f"Enumerated bits:\n{bits}")
-#
-# hamming_index = functools.reduce(lambda x, y: x ^ y, [i for i, bit in list(enumerate(bits)) if bit])
-# print(f"Erroneous index: {hamming_index}")
-
 def hamming(length):
     bits = np.random.randint(0, 2, length)
     print(f"INPUT:\n{bits}")
